@@ -5,20 +5,16 @@ namespace NBomber.WebBrowser;
 
 public static class PlaywrightExtension
 {
-    public static Contracts.Response<IResponse> ToNBomberResponse(this IResponse response)
+    public static async Task<Contracts.Response<IResponse>> ToNBomberResponse(this IResponse response)
     {
-        var respBody =  response.BodyAsync().Result.Length;
-        var respHeaders = response.AllHeadersAsync().Result.Sum(kv => kv.Value.Length + kv.Key.Length);
+        var respBody = await response.BodyAsync();
+        var respHeaders = await response.AllHeadersAsync();
+        var reqHeaders = await response.Request.AllHeadersAsync();
 
-        var reqBody = response.Request.PostDataBuffer?.Length;
-        var reqHeaders = response.Request.AllHeadersAsync().Result.Sum(kv => kv.Value.Length + kv.Key.Length);
+        var sizeBytes = respBody.Length + respHeaders.Sum(kv => kv.Value.Length + kv.Key.Length) 
+                                        + (response.Request.PostDataBuffer?.Length ?? 0) 
+                                        + reqHeaders.Sum(kv => kv.Value.Length + kv.Key.Length);
 
-        var sizeBytes = respBody + respHeaders + (reqBody ?? 0) + reqHeaders;
-
-        /*return Response.Ok(payload: response, statusCode: response.Status.ToString(), sizeBytes: sizeBytes);*/
-
-        return response.Ok ? 
-            Response.Ok(payload: response, sizeBytes: sizeBytes) : 
-            Response.Fail(payload: response, sizeBytes: sizeBytes);
+        return Response.Ok(payload: response, statusCode: response.Status.ToString(), sizeBytes: sizeBytes);
     }
 }
