@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBomber.WebBrowser", "NBomber.WebBrowser\NBomber.WebBrowser.csproj", "{168AC9D5-5855-4D4A-B741-709549272D99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBomber.WebBrowser", "src\NBomber.WebBrowser\NBomber.WebBrowser.csproj", "{73B37EAF-90E5-465F-97DB-874FD956A82C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{168AC9D5-5855-4D4A-B741-709549272D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{168AC9D5-5855-4D4A-B741-709549272D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{168AC9D5-5855-4D4A-B741-709549272D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{168AC9D5-5855-4D4A-B741-709549272D99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B37EAF-90E5-465F-97DB-874FD956A82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B37EAF-90E5-465F-97DB-874FD956A82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B37EAF-90E5-465F-97DB-874FD956A82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B37EAF-90E5-465F-97DB-874FD956A82C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
