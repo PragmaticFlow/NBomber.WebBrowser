@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace NBomber.WebBrowser;
+namespace NBomber.WebBrowser.PuppeteerSharp;
 
 public static class PuppeteerSharpExtension
 {

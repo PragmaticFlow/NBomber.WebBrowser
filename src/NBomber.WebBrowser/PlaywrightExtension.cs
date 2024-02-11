@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using NBomber.CSharp;
 
-namespace NBomber.WebBrowser;
+namespace NBomber.WebBrowser.Playwright;
 
 public static class PlaywrightExtension
 {
