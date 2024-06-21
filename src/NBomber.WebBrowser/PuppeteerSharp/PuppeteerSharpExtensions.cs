@@ -2,11 +2,11 @@
 
 namespace NBomber.WebBrowser.PuppeteerSharp;
 
-public static class PuppeteerSharpExtension
+public static class PuppeteerSharpExtensions
 {
     public static async Task<Contracts.Response<IResponse>> ToNBomberResponse(this IResponse response)
     {
-        var respBody =  await response.BufferAsync();
+        var respBody = await response.BufferAsync();
         var respHeaders = response.Headers;
         var reqHeaders = response.Request.Headers;
 

@@ -3,7 +3,7 @@ using NBomber.CSharp;
 
 namespace NBomber.WebBrowser.Playwright;
 
-public static class PlaywrightExtension
+public static class PlaywrightExtensions
 {
     public static async Task<Contracts.Response<IResponse>> ToNBomberResponse(this IResponse response)
     {
