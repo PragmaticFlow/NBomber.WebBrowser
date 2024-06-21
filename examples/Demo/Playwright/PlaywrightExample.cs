@@ -13,14 +13,16 @@ public class PlaywrightExample
         
         using var playwright = await Playwright.CreateAsync();
         
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { ExecutablePath = browserPath });
+        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, ExecutablePath = browserPath });
 
         var scenario = Scenario.Create("playwright_scenario", async context =>
         {
             var page = await browser.NewPageAsync();
-            var pageResponse = await page.GotoAsync("https://nbomber.com");
+            var pageResponse = await page.GotoAsync("https://translate.google.com/");
             
             var response = await pageResponse.ToNBomberResponse();
+            page.CloseAsync();
+            
             return response;
         })
         .WithoutWarmUp()

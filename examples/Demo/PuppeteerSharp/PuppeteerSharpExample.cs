@@ -15,9 +15,11 @@ public class PuppeteerSharpExample
         var scenario = Scenario.Create("puppeteer_scenario", async context =>
         {
             await using var page = await browser.NewPageAsync();
-            var pageResponse = await page.GoToAsync("https://nbomber.com");
+            var pageResponse = await page.GoToAsync("https://translate.google.com/");
 
             var response = await pageResponse.ToNBomberResponse();
+            page.CloseAsync();
+            
             return response;
         })
         .WithoutWarmUp()
