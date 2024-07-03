@@ -1,12 +1,12 @@
-﻿using Microsoft.Playwright;
+﻿using PuppeteerSharp;
 
-namespace NBomber.WebBrowser.Playwright;
+namespace NBomber.WebBrowser.Puppeteer;
 
-public static class PlaywrightExtensions
+public static class PuppeteerExtensions
 {
     public static Task<string> GetDataTransferResources(this IPage page)
     {
-        return page.EvaluateAsync<string>(
+        return page.EvaluateFunctionAsync<string>(
             """
             () =>
             {
@@ -17,7 +17,7 @@ public static class PlaywrightExtensions
 
     public static Task<long> GetDataTransferSize(this IPage page)
     {
-        return page.EvaluateAsync<long>(
+        return page.EvaluateFunctionAsync<long>(
             """
             () =>
             {
