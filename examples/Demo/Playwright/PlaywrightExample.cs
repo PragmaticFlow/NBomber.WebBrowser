@@ -4,62 +4,46 @@ using PuppeteerSharp;
 
 namespace Demo.Playwright;
 
-using Microsoft.Playwright;
-
 public class PlaywrightExample
 {
     public static async Task Run()
     {
-        // downloading the Chrome
         var installedBrowser = await new BrowserFetcher(SupportedBrowser.Chrome).DownloadAsync(BrowserTag.Stable);
         var browserPath = installedBrowser.GetExecutablePath();
-        
-        using var playwright = await Playwright.CreateAsync();
-        
-        await using var browser = await playwright.Chromium.LaunchAsync(
-            new BrowserTypeLaunchOptions
-            {
-                Headless = true,
-                ExecutablePath = browserPath
-            }
-        );
+
+        await using var playwrightBrowserPool = new PlaywrightBrowserPool();
+
+        // Set the target number of concurrent virtual users
+        var targetVirtualUsers = 3;
 
         var scenario = Scenario.Create("playwright_scenario", async context =>
         {
-            var page = await browser.NewPageAsync();
-            
-            await Step.Run("open nbomber", context, async () =>
+            // Get a browser context from the pool
+            // This ensures each virtual user has its own isolated context
+            var browserContext = playwrightBrowserPool.GetBrowserContext(context.ScenarioInfo.InstanceNumber);
+            var page = await browserContext.NewPageAsync();
+
+            try
             {
-                var pageResponse = await page.GotoAsync("https://nbomber.com/");
+                await Step.Run("open local website", context, async () =>
+                {
+                    await page.GotoAsync("http://localhost:5280");
+                    return Response.Ok();
+                });
 
-                var html = await page.ContentAsync();
-                var totalSize = await page.GetDataTransferSize();
-                
-                return Response.Ok(sizeBytes: totalSize);
-            });
-
-            await Step.Run("open bing", context, async () =>
+                return Response.Ok();
+            }
+            finally
             {
-                var pageResponse = await page.GotoAsync("https://www.bing.com/maps");
-                
-                await page.WaitForSelectorAsync(".searchbox input");
-                await page.FocusAsync(".searchbox input");
-                await page.Keyboard.TypeAsync("CN Tower, Toronto, Ontario, Canada");
-                
-                await page.Keyboard.PressAsync("Enter");
-                await page.WaitForLoadStateAsync(LoadState.Load);
-
-                var totalSize = await page.GetDataTransferSize();
-                return Response.Ok(sizeBytes: totalSize);
-            });
-
-            await page.CloseAsync();
-            
-            return Response.Ok();
+                // Ensure page is closed even if there's an exception
+                // The browser context remains alive and will be reused
+                await page.CloseAsync();
+            }
         })
-        .WithWarmUpDuration(TimeSpan.FromSeconds(3))
+        .WithInit(async context => await playwrightBrowserPool.Initialize(targetVirtualUsers, browserPath))
+        .WithWarmUpDuration(TimeSpan.FromSeconds(5))
         .WithLoadSimulations(
-            Simulation.KeepConstant(1, TimeSpan.FromSeconds(30))
+            Simulation.KeepConstant(targetVirtualUsers, TimeSpan.FromSeconds(30))
         );
 
         NBomberRunner
